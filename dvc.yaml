@@ -1,0 +1,47 @@
+stages:
+  #  model pipeline to execute the model
+  # creation of raw dataset before preprocessing
+  raw_dataset_creation:
+    cmd: python src/data/load_data.py --config=params.yaml
+    deps:
+      - src/data/load_data.py
+      - data/external/train.csv
+    outs:
+      - data/raw/train.csv
+  # preprocessing stage
+  split_data:
+    cmd: python src/data/split_data.py --config=params.yaml
+    deps:
+      - src/data/split_data.py
+      - data/raw/train.csv
+    outs:
+      - data/processed/churn_train.csv
+      - data/processed/churn_test.csv
+
+  # model training
+  model_train:
+    cmd: python src/models/train_model.py --config=params.yaml
+    deps:
+      - data/processed/churn_train.csv
+      - data/processed/churn_test.csv
+      - src/models/train_model.py
+    params:
+      - random_forest.max_depth
+      - random_forest.n_estimators
+    metrics:
+      - report/metrics.json:
+          cache: false
+      - report/params.json:
+          cache: false
+    # outs:
+    #   - models/model.joblib
+  # # selection of production model
+  log_production_model:
+    cmd: python src/models/production_model_selection.py --config=params.yaml
+    deps:
+      - src/models/production_model_selection.py
+    params:
+      - random_forest.max_depth
+      - random_forest.n_estimators
+    outs:
+      - models/model.joblib

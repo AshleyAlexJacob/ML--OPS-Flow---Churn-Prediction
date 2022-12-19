@@ -1,0 +1,68 @@
+schema: '2.0'
+stages:
+  raw_dataset_creation:
+    cmd: python src/data/load_data.py --config=params.yaml
+    deps:
+    - path: data/external/train.csv
+      md5: 8929517566f004183dff480fdd48afe0
+      size: 391872
+    - path: src/data/load_data.py
+      md5: 979221ddcebd0b130362f6bb96dc9caa
+      size: 904
+    outs:
+    - path: data/raw/train.csv
+      md5: 9b61c38a459d36244dbf8e6940236371
+      size: 120397
+  split_data:
+    cmd: python src/data/split_data.py --config=params.yaml
+    deps:
+    - path: data/raw/train.csv
+      md5: 9b61c38a459d36244dbf8e6940236371
+      size: 120397
+    - path: src/data/split_data.py
+      md5: a98fe537e0ac4b6d2a2202a316200a3b
+      size: 1361
+    outs:
+    - path: data/processed/churn_test.csv
+      md5: c3a4965f71511e72d4af9ac650f47505
+      size: 24209
+    - path: data/processed/churn_train.csv
+      md5: 8358e3ab11f8301c58d3b0e5aa99a6fd
+      size: 96317
+  model_train:
+    cmd: python src/models/train_model.py --config=params.yaml
+    deps:
+    - path: data/processed/churn_test.csv
+      md5: c3a4965f71511e72d4af9ac650f47505
+      size: 24209
+    - path: data/processed/churn_train.csv
+      md5: 8358e3ab11f8301c58d3b0e5aa99a6fd
+      size: 96317
+    - path: src/models/train_model.py
+      md5: 718a38b7f2abd5015a4eecf72e04c3cb
+      size: 4436
+    params:
+      params.yaml:
+        random_forest.max_depth: 10
+        random_forest.n_estimators: 30
+    outs:
+    - path: report/metrics.json
+      md5: fe8bfddd8a4670ccab7973e9361cfa64
+      size: 150
+    - path: report/params.json
+      md5: d7904202537c1fdb41f7054ac6689c3a
+      size: 50
+  log_production_model:
+    cmd: python src/models/production_model_selection.py --config=params.yaml
+    deps:
+    - path: src/models/production_model_selection.py
+      md5: 648a2d25efcf62cb7c653666eb246e22
+      size: 1763
+    params:
+      params.yaml:
+        random_forest.max_depth: 10
+        random_forest.n_estimators: 30
+    outs:
+    - path: models/model.joblib
+      md5: 2d753f1e9175e43d48f353fe070aac8e
+      size: 635428
