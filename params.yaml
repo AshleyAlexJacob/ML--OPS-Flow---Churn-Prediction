@@ -36,7 +36,7 @@ mlflow_config:
 
 model_dir: models/model.joblib
 
-model_webapp_dir: webapp/model_webapp_dir/model.joblib
+model_webapp_dir: models/model.joblib
 
 model_monitor:
   target_col_name: target
@@ -49,3 +49,5 @@ reports:
 best_model_reports:
   params: report/best/best_params.json
   metrics: report/best/best_metrics.json
+
+
