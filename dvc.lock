@@ -12,57 +12,57 @@ stages:
     outs:
     - path: data/raw/train.csv
       md5: 9b61c38a459d36244dbf8e6940236371
-      size: 120397
+      size: 116146
   split_data:
     cmd: python src/data/split_data.py --config=params.yaml
     deps:
     - path: data/raw/train.csv
       md5: 9b61c38a459d36244dbf8e6940236371
-      size: 120397
+      size: 116146
     - path: src/data/split_data.py
       md5: a98fe537e0ac4b6d2a2202a316200a3b
       size: 1361
     outs:
     - path: data/processed/churn_test.csv
       md5: c3a4965f71511e72d4af9ac650f47505
-      size: 24209
+      size: 23358
     - path: data/processed/churn_train.csv
       md5: 8358e3ab11f8301c58d3b0e5aa99a6fd
-      size: 96317
+      size: 92916
   model_train:
     cmd: python src/models/train_model.py --config=params.yaml
     deps:
     - path: data/processed/churn_test.csv
       md5: c3a4965f71511e72d4af9ac650f47505
-      size: 24209
+      size: 23358
     - path: data/processed/churn_train.csv
       md5: 8358e3ab11f8301c58d3b0e5aa99a6fd
-      size: 96317
+      size: 92916
     - path: src/models/train_model.py
-      md5: 718a38b7f2abd5015a4eecf72e04c3cb
-      size: 4436
+      md5: d50f118f5b26792ac38c61d91ca89892
+      size: 4112
     params:
       params.yaml:
-        random_forest.max_depth: 10
-        random_forest.n_estimators: 30
+        random_forest.max_depth: 100
+        random_forest.n_estimators: 40
     outs:
     - path: report/metrics.json
-      md5: fe8bfddd8a4670ccab7973e9361cfa64
-      size: 150
+      md5: 28f059fefa425d3e8e10fee318734056
+      size: 143
     - path: report/params.json
-      md5: d7904202537c1fdb41f7054ac6689c3a
-      size: 50
+      md5: ae7b42d948e61f866747b265c2a87659
+      size: 48
   log_production_model:
     cmd: python src/models/production_model_selection.py --config=params.yaml
     deps:
     - path: src/models/production_model_selection.py
-      md5: 648a2d25efcf62cb7c653666eb246e22
-      size: 1763
+      md5: eff97533b415e7199a5ae4231509f2ce
+      size: 1643
     params:
       params.yaml:
-        random_forest.max_depth: 10
-        random_forest.n_estimators: 30
+        random_forest.max_depth: 100
+        random_forest.n_estimators: 40
     outs:
     - path: models/model.joblib
-      md5: 2d753f1e9175e43d48f353fe070aac8e
-      size: 635428
+      md5: 35bf40c4e7d8f7abe7b291a8e1ab5795
+      size: 651113

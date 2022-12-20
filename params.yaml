@@ -24,8 +24,8 @@ processed_data_config:
 
 # params of the model
 random_forest:
-  max_depth: 10
-  n_estimators: 30
+  max_depth: 100
+  n_estimators: 40
 
 mlflow_config:
   artifacts_dir: artifacts

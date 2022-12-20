@@ -1,24 +1,12 @@
 import json
-import yaml
-import joblib
 import mlflow
-import argparse
 import numpy as np
 import pandas as pd
 from urllib.parse import urlparse
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import f1_score, recall_score, accuracy_score, precision_score, confusion_matrix, classification_report
-
-
-def read_params(config_path):
-    """
-    read parameters from the params.yaml file
-    input: params.yaml location
-    output: parameters as dictionary
-    """
-    with open(config_path) as yaml_file:
-        config = yaml.safe_load(yaml_file)
-    return config
+from utils.read_params import readParams
+from utils.get_args import getArguments
 
 
 def accuracymeasures(y_test, predictions, avg_method):
@@ -57,7 +45,7 @@ def get_feat_and_target(df, target):
 
 
 def train_and_evaluate(config_path):
-    config = read_params(config_path)
+    config = readParams(config_path)
     train_data_path = config["processed_data_config"]["train_data_csv"]
     test_data_path = config["processed_data_config"]["test_data_csv"]
     target = config["raw_data_config"]["target"]
@@ -122,7 +110,5 @@ def train_and_evaluate(config_path):
 
 
 if __name__ == "__main__":
-    args = argparse.ArgumentParser()
-    args.add_argument("--config", default="params.yaml")
-    parsed_args = args.parse_args()
+    parsed_args = getArguments()
     train_and_evaluate(config_path=parsed_args.config)

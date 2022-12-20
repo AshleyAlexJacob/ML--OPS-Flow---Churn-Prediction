@@ -1,13 +1,13 @@
 import joblib
 import mlflow
-import argparse
 from pprint import pprint
-from train_model import read_params
 from mlflow.tracking import MlflowClient
+from utils.read_params import readParams
+from utils.get_args import getArguments
 
 
 def log_production_model(config_path):
-    config = read_params(config_path)
+    config = readParams(config_path)
     mlflow_config = config["mlflow_config"]
     model_name = mlflow_config["registered_model_name"]
     model_dir = config["model_dir"]
@@ -45,7 +45,5 @@ def log_production_model(config_path):
 
 
 if __name__ == '__main__':
-    args = argparse.ArgumentParser()
-    args.add_argument("--config", default="params.yaml")
-    parsed_args = args.parse_args()
+    parsed_args = getArguments()
     data = log_production_model(config_path=parsed_args.config)
