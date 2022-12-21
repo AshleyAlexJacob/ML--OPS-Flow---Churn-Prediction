@@ -1,0 +1,9 @@
+version: '0.0.1.RELEASE'
+services:
+    web:
+        build: .
+        ports:
+            - "5001:5001"
+        volumes:
+            - .:/app
+        
