@@ -1,7 +1,8 @@
 churn_model
 ==============================
 
-This is a test project to practise the MlFlow lifecycle
+This is a project to implement machine learning pipeline flows for a production ready application powered by A.I
+
 
 Project Organization
 ------------
