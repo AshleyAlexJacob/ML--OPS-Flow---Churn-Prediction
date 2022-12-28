@@ -36,9 +36,5 @@ def init_application():
         return {'error 2':'Request should be POST'}
 
    
-if __name__=='__main__':
-    port = int(os.environ.get('PORT', 5001))
-    application.run(debug=True,use_reloader=True,port=port,host='0.0.0.0')
-
 
 
